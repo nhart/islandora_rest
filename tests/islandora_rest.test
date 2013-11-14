@@ -15,7 +15,7 @@ class IslandoraRestTestCase extends IslandoraHttpRestTestCase {
     return array(
       'name' => 'Islandora Rest',
       'description' => 'Ensure that the REST end-points function as expected.',
-      'group' => 'Islandora',
+      'group' => 'Islandora Rest',
     );
   }
 
