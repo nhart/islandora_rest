@@ -86,7 +86,7 @@
 
   <target name="test">
     <exec executable="bash">
-        <arg line='-c "php ../../../../scripts/run-tests.sh --xml ${basedir}/build/test IslandoraRestTestCase"' />
+        <arg line='-c "php ../../../../scripts/run-tests.sh --xml ${basedir}/build/test Islandora\ Rest"' />
     </exec>
   </target>
   
