@@ -49,7 +49,8 @@ function islandora_rest_get_response($endpoint, array $path_parameters) {
   $encode = is_array($response) || is_object($response);
   if ($encode) {
     // Reponses that don't generate objects or arrays, must set their own
-    // content types.
+    // content types. Not calling drupal_json_output because we are setting
+    // encoding.
     drupal_add_http_header('Content-Type', 'application/json; utf-8');
     return drupal_json_encode($response);
   }

@@ -9,6 +9,7 @@ define('ISLANDORA_REST_VERSION', 'v1');
 define('ISLANDORA_REST_URL_PREFIX', 'islandora/rest/' . ISLANDORA_REST_VERSION);
 define('ISLANDORA_REST_OBJECT_MENU', ISLANDORA_REST_URL_PREFIX . '/object');
 define('ISLANDORA_REST_DATASTREAM_MENU', ISLANDORA_REST_OBJECT_MENU . '/%/datastream');
+define('ISLANDORA_REST_DATASTREAM_TOKEN_MENU', ISLANDORA_REST_DATASTREAM_MENU . '/%/token');
 define('ISLANDORA_REST_RELATIONSHIP_MENU', ISLANDORA_REST_OBJECT_MENU . '/%/relationship');
 define('ISLANDORA_REST_SOLR_MENU', ISLANDORA_REST_URL_PREFIX . '/solr');
 define('ISLANDORA_REST_OBJECT_GET_PERM', 'view objects');
@@ -27,7 +28,7 @@ define('ISLANDORA_REST_RELATIONSHIP_DELETE_PERM', 'delete relationships');
  * Implements hook_menu().
  */
 function islandora_rest_menu() {
-  // We don't use the access callback for any of the REST end-poinst as we can't
+  // We don't use the access callback for any of the REST end-points as we can't
   // reliably return JSON from that point.
   return array(
     ISLANDORA_REST_OBJECT_MENU => array(
@@ -37,6 +38,12 @@ function islandora_rest_menu() {
     ),
     ISLANDORA_REST_DATASTREAM_MENU => array(
       'page callback' => 'islandora_rest_datastream',
+      'page arguments' => array(4, 6),
+      'access callback' => TRUE,
+      'type' => MENU_CALLBACK,
+    ),
+    ISLANDORA_REST_DATASTREAM_TOKEN_MENU => array(
+      'page callback' => 'islandora_rest_datastream_token',
       'page arguments' => array(4, 6),
       'access callback' => TRUE,
       'type' => MENU_CALLBACK,
@@ -123,9 +130,20 @@ function islandora_rest_object($pid = NULL) {
  *
  * @note This function exits.
  */
-function islandora_rest_datastream($pid, $dsid = NULL) {
+function islandora_rest_datastream($pid, $dsid) {
   module_load_include('inc', 'islandora_rest', 'includes/utilities');
   print islandora_rest_get_response('datastream', array('pid' => $pid, 'dsid' => $dsid));
+  exit();
+}
+
+/**
+ * Rest end-point for datastream tokens.
+ *
+ * @note This function exits.
+ */
+function islandora_rest_datastream_token($pid, $dsid) {
+  module_load_include('inc', 'islandora_rest', 'includes/utilities');
+  print islandora_rest_get_response('datastream_token', array('pid' => $pid, 'dsid' => $dsid));
   exit();
 }
 
