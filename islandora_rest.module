@@ -5,6 +5,8 @@
  * Defines all the hooks this module implements.
  */
 
+
+// Menu items.
 define('ISLANDORA_REST_VERSION', 'v1');
 define('ISLANDORA_REST_URL_PREFIX', 'islandora/rest/' . ISLANDORA_REST_VERSION);
 define('ISLANDORA_REST_OBJECT_MENU', ISLANDORA_REST_URL_PREFIX . '/object');
@@ -12,6 +14,8 @@ define('ISLANDORA_REST_DATASTREAM_MENU', ISLANDORA_REST_OBJECT_MENU . '/%/datast
 define('ISLANDORA_REST_DATASTREAM_TOKEN_MENU', ISLANDORA_REST_DATASTREAM_MENU . '/%/token');
 define('ISLANDORA_REST_RELATIONSHIP_MENU', ISLANDORA_REST_OBJECT_MENU . '/%/relationship');
 define('ISLANDORA_REST_SOLR_MENU', ISLANDORA_REST_URL_PREFIX . '/solr');
+
+// Permissions.
 define('ISLANDORA_REST_OBJECT_GET_PERM', 'view objects');
 define('ISLANDORA_REST_OBJECT_POST_PERM', 'create objects');
 define('ISLANDORA_REST_OBJECT_PUT_PERM', 'modify object properties');
