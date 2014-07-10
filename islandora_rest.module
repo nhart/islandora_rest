@@ -5,17 +5,23 @@
  * Defines all the hooks this module implements.
  */
 
+
+// Menu items.
 define('ISLANDORA_REST_VERSION', 'v1');
 define('ISLANDORA_REST_URL_PREFIX', 'islandora/rest/' . ISLANDORA_REST_VERSION);
 define('ISLANDORA_REST_OBJECT_MENU', ISLANDORA_REST_URL_PREFIX . '/object');
 define('ISLANDORA_REST_DATASTREAM_MENU', ISLANDORA_REST_OBJECT_MENU . '/%/datastream');
+define('ISLANDORA_REST_DATASTREAM_TOKEN_MENU', ISLANDORA_REST_DATASTREAM_MENU . '/%/token');
 define('ISLANDORA_REST_RELATIONSHIP_MENU', ISLANDORA_REST_OBJECT_MENU . '/%/relationship');
 define('ISLANDORA_REST_SOLR_MENU', ISLANDORA_REST_URL_PREFIX . '/solr');
+
+// Permissions.
 define('ISLANDORA_REST_OBJECT_GET_PERM', 'view objects');
 define('ISLANDORA_REST_OBJECT_POST_PERM', 'create objects');
 define('ISLANDORA_REST_OBJECT_PUT_PERM', 'modify object properties');
 define('ISLANDORA_REST_OBJECT_DELETE_PERM', 'delete objects');
 define('ISLANDORA_REST_DATASTREAM_GET_PERM', 'view datastreams');
+define('ISLANDORA_REST_DATASTREAM_TOKEN_GET_PERM', 'generate datastream token');
 define('ISLANDORA_REST_DATASTREAM_POST_PERM', 'create datastreams');
 define('ISLANDORA_REST_DATASTREAM_PUT_PERM', 'modify datastreams');
 define('ISLANDORA_REST_DATASTREAM_DELETE_PERM', 'delete datastreams');
@@ -23,30 +29,11 @@ define('ISLANDORA_REST_RELATIONSHIP_GET_PERM', 'list relationships');
 define('ISLANDORA_REST_RELATIONSHIP_POST_PERM', 'create relationships');
 define('ISLANDORA_REST_RELATIONSHIP_DELETE_PERM', 'delete relationships');
 
-// @codingStandardsIgnoreStart
-// XXX: This should be removed at some point in the future.
-define('MENU_ISLANDORA_REST_OBJECT', ISLANDORA_REST_OBJECT_MENU);
-define('MENU_ISLANDORA_REST_DATASTREAM', ISLANDORA_REST_DATASTREAM_MENU);
-define('MENU_ISLANDORA_REST_RELATIONSHIP', ISLANDORA_REST_RELATIONSHIP_MENU);
-define('MENU_ISLANDORA_REST_SOLR', ISLANDORA_REST_SOLR_MENU);
-define('PERM_OBJECT_GET', ISLANDORA_REST_OBJECT_GET_PERM);
-define('PERM_OBJECT_POST', ISLANDORA_REST_OBJECT_POST_PERM);
-define('PERM_OBJECT_PUT', ISLANDORA_REST_OBJECT_PUT_PERM);
-define('PERM_OBJECT_DELETE', ISLANDORA_REST_OBJECT_DELETE_PERM);
-define('PERM_DATASTREAM_GET', ISLANDORA_REST_DATASTREAM_GET_PERM);
-define('PERM_DATASTREAM_POST', ISLANDORA_REST_DATASTREAM_POST_PERM);
-define('PERM_DATASTREAM_PUT', ISLANDORA_REST_DATASTREAM_PUT_PERM);
-define('PERM_DATASTREAM_DELETE', ISLANDORA_REST_DATASTREAM_DELETE_PERM);
-define('PERM_RELATIONSHIP_GET', ISLANDORA_REST_RELATIONSHIP_GET_PERM);
-define('PERM_RELATIONSHIP_POST', ISLANDORA_REST_RELATIONSHIP_POST_PERM);
-define('PERM_RELATIONSHIP_DELETE', ISLANDORA_REST_RELATIONSHIP_DELETE_PERM);
-// @codingStandardsIgnoreEnd
-
 /**
  * Implements hook_menu().
  */
 function islandora_rest_menu() {
-  // We don't use the access callback for any of the REST end-poinst as we can't
+  // We don't use the access callback for any of the REST end-points as we can't
   // reliably return JSON from that point.
   return array(
     ISLANDORA_REST_OBJECT_MENU => array(
@@ -56,6 +43,12 @@ function islandora_rest_menu() {
     ),
     ISLANDORA_REST_DATASTREAM_MENU => array(
       'page callback' => 'islandora_rest_datastream',
+      'page arguments' => array(4, 6),
+      'access callback' => TRUE,
+      'type' => MENU_CALLBACK,
+    ),
+    ISLANDORA_REST_DATASTREAM_TOKEN_MENU => array(
+      'page callback' => 'islandora_rest_datastream_token',
       'page arguments' => array(4, 6),
       'access callback' => TRUE,
       'type' => MENU_CALLBACK,
@@ -96,6 +89,10 @@ function islandora_rest_permission() {
       'description' => t('Allows users to delete objects.'),
     ),
     ISLANDORA_REST_DATASTREAM_GET_PERM => array(
+      'title' => t('Generate Datastream Tokens'),
+      'description' => t('Allows users to get an authorization token for a datastream.'),
+    ),
+    ISLANDORA_REST_DATASTREAM_TOKEN_GET_PERM => array(
       'title' => t('View datastreams'),
       'description' => t('Allows users to get a given datastream content and properties.'),
     ),
@@ -142,9 +139,20 @@ function islandora_rest_object($pid = NULL) {
  *
  * @note This function exits.
  */
-function islandora_rest_datastream($pid, $dsid = NULL) {
+function islandora_rest_datastream($pid, $dsid) {
   module_load_include('inc', 'islandora_rest', 'includes/utilities');
   print islandora_rest_get_response('datastream', array('pid' => $pid, 'dsid' => $dsid));
+  exit();
+}
+
+/**
+ * Rest end-point for datastream tokens.
+ *
+ * @note This function exits.
+ */
+function islandora_rest_datastream_token($pid, $dsid) {
+  module_load_include('inc', 'islandora_rest', 'includes/utilities');
+  print islandora_rest_get_response('datastream_token', array('pid' => $pid, 'dsid' => $dsid));
   exit();
 }
 

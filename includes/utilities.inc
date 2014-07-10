@@ -49,7 +49,8 @@ function islandora_rest_get_response($endpoint, array $path_parameters) {
   $encode = is_array($response) || is_object($response);
   if ($encode) {
     // Reponses that don't generate objects or arrays, must set their own
-    // content types.
+    // content types. Not calling drupal_json_output because we are setting
+    // encoding.
     drupal_add_http_header('Content-Type', 'application/json; utf-8');
     return drupal_json_encode($response);
   }
@@ -144,8 +145,29 @@ function islandora_rest_get_pid_dsid_from_path_parameters(array $path_parameters
  *   The request method (GET/POST/PUT/DELETE).
  */
 function islandora_rest_resource_access_permission($endpoint, $request_method) {
-  $perm = strtoupper("PERM_{$endpoint}_{$request_method}");
-  return defined($perm) ? constant($perm) : FALSE;
+  $perm_map = array(
+    'object' => array(
+      'GET' => ISLANDORA_REST_OBJECT_GET_PERM,
+      'PUT' => ISLANDORA_REST_OBJECT_PUT_PERM,
+      'POST' => ISLANDORA_REST_OBJECT_POST_PERM,
+      'DELETE' => ISLANDORA_REST_OBJECT_DELETE_PERM,
+    ),
+    'datastream' => array(
+      'GET' => ISLANDORA_REST_DATASTREAM_GET_PERM,
+      'PUT' => ISLANDORA_REST_DATASTREAM_PUT_PERM,
+      'POST' => ISLANDORA_REST_DATASTREAM_POST_PERM,
+      'DELETE' => ISLANDORA_REST_DATASTREAM_DELETE_PERM,
+    ),
+    'datastream_token' => array(
+      'GET' => ISLANDORA_REST_DATASTREAM_TOKEN_GET_PERM,
+    ),
+    'relationship' => array(
+      'GET' => ISLANDORA_REST_RELATIONSHIP_GET_PERM,
+      'POST' => ISLANDORA_REST_RELATIONSHIP_POST_PERM,
+      'DELETE' => ISLANDORA_REST_RELATIONSHIP_DELETE_PERM,
+    ),
+  );
+  return $perm_map[$endpoint][$request_method];
 }
 
 /**
