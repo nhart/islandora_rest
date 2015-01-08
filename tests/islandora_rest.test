@@ -5,6 +5,10 @@
  * Test all of the REST end-points.
  */
 
+// This require is necessary to prevent the test page from erroring when the
+// module is disabled.
+require_once(__DIR__ . '/islandora_http_rest_test_case.inc');
+
 class IslandoraRestTestCase extends IslandoraHttpRestTestCase {
   /**
    * Gets info to display to describe this test.
