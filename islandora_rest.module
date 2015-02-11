@@ -88,11 +88,11 @@ function islandora_rest_permission() {
       'title' => t('Delete objects'),
       'description' => t('Allows users to delete objects.'),
     ),
-    ISLANDORA_REST_DATASTREAM_GET_PERM => array(
+    ISLANDORA_REST_DATASTREAM_TOKEN_GET_PERM => array(
       'title' => t('Generate Datastream Tokens'),
       'description' => t('Allows users to get an authorization token for a datastream.'),
     ),
-    ISLANDORA_REST_DATASTREAM_TOKEN_GET_PERM => array(
+    ISLANDORA_REST_DATASTREAM_GET_PERM => array(
       'title' => t('View datastreams'),
       'description' => t('Allows users to get a given datastream content and properties.'),
     ),
