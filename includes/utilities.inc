@@ -317,3 +317,71 @@ function islandora_rest_require_parameters(array $params, array $required) {
     throw new Exception($message, 400);
   }
 }
+
+/**
+ * Handles Solr requests due to repeatable parameters and '.'s in params.
+ *
+ * @param array $query
+ *   An array containing:
+ *   -query (string): The query string to be searched.
+ *
+ * @return string
+ *   A JSON encode string, representing the response for the requested resource.
+ */
+function islandora_rest_get_solr_response(array $query) {
+  module_load_include('inc', 'islandora_rest', "includes/solr");
+  $request_method = islandora_rest_get_request_method();
+  try {
+    // Check Drupal Permissions. Throws 401, 403, if access is denied.
+    islandora_rest_require_access('solr', $request_method);
+    $parameters = array(
+      'path' => $query,
+      'request' => islandora_rest_get_solr_parameters(),
+    );
+    // Can throw 400, 401, 500, etc.
+    $response = islandora_rest_solr_get_response($parameters);
+  }
+  catch (Exception $e) {
+    drupal_add_http_header('Status', $e->getCode());
+    $response = array('message' => $e->getMessage());
+  }
+  $encode = is_array($response) || is_object($response);
+  if ($encode) {
+    // Reponses that don't generate objects or arrays, must set their own
+    // content types. Not calling drupal_json_output because we are setting
+    // encoding.
+    drupal_add_http_header('Content-Type', 'application/json; utf-8');
+    return drupal_json_encode($response);
+  }
+  return $response;
+}
+
+/**
+ * Handles the case of '.'s and repeatable fields by not using $_GET.
+ *
+ * @return array
+ *   An array containing the parameters to be passed to Solr to query.
+ * @throws Exception
+ *   Only GET is a valid call to Solr as of current.
+ */
+function islandora_rest_get_solr_parameters() {
+  if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    $pairs = explode("&", $_SERVER['QUERY_STRING']);
+    $parsed_params = array();
+    foreach ($pairs as $pair) {
+      list($name, $value) = array_map('urldecode', explode('=', $pair, 2));
+      if (isset($parsed_params[$name])) {
+        $parsed_params[$name] = (array) $parsed_params[$name];
+        $parsed_params[$name][] = $value;
+
+      }
+      else {
+        $parsed_params[$name] = $value;
+      }
+    }
+    return $parsed_params;
+  }
+  else {
+    throw new Exception('Method Not Allowed', 405);
+  }
+}
