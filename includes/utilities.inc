@@ -369,8 +369,15 @@ function islandora_rest_get_solr_parameters() {
     $pairs = explode("&", $_SERVER['QUERY_STRING']);
     $parsed_params = array();
     foreach ($pairs as $pair) {
-      $name_value = explode('=', $pair);
-      $parsed_params[urldecode($name_value[0])][] = urldecode($name_value[1]);
+      list($name, $value) = array_map('urldecode', explode('=', $pair, 2));
+      if (isset($parsed_params[$name])) {
+        $parsed_params[$name] = (array) $parsed_params[$name];
+        $parsed_params[$name][] = $value;
+
+      }
+      else {
+        $parsed_params[$name] = $value;
+      }
     }
     return $parsed_params;
   }
