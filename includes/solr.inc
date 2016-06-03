@@ -38,20 +38,24 @@ function islandora_rest_solr_get_response(array $parameters) {
         $request['fq'][] = $xacml_fq;
       }
       else {
-        $request['fq'] .= "AND $xacml_fq";
+        $request['fq'] = array(
+          $xacml_fq,
+          $request['fq'],
+        );
       }
     }
     else {
       $request['fq'] = $xacml_fq;
     }
   }
-  // Query is executed.
+  // Query is executed. Errors are caught and sent through to the response.
   try {
     $results = $solr->search($query, 0, isset($request['limit']) ? $request['limit'] : 10, $request, 'GET');
   }
   catch (Exception $e) {
-    drupal_set_message(check_plain(t('Error searching Solr index')) . ' ' . $e->getMessage(), 'error');
-    return NULL;
+    watchdog('islandora_rest', 'Invalid Solr request: @message', array('@message' => $e->getMessage()), WATCHDOG_WARNING);
+    $message = $e->getCode() == 400 ? t('Invalid Solr request.') : t('An error occurred and the request could not be processed.');
+    throw new Exception($message, $e->getCode());
   }
   return json_decode($results->getRawResponse(), TRUE);
 }

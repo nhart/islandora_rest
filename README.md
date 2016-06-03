@@ -141,6 +141,16 @@ used.
 ### Common Responses
 Unless otherwise specified each end-point can return the following responses.
 
+#### Response: 400 Bad Request
+##### Content-Type: application/json
+|Name   |Description                              |
+|-------|-----------------------------------------|
+|message|A message saying the request was invalid.|
+
+400 errors will be triggered by invalid information being provided to a query.
+In these cases, the request should not be repeated, but rather fixed before
+another request is made.
+
 #### Response: 401 Unauthorized
 ##### No response body.
 In general 401 means an anonymous user attempted some action and was denied.
@@ -550,6 +560,10 @@ Accept: application/json
 ## Search For Objects
 This is a light wrapper for the SOLR own end point. It incorporates XACML alters
 to restrict the search results for the given user.
+
+Because parameters are passed through to Solr carte blanche, invalid requests
+may trigger 400 errors. `Apache_Solr_Service` does not provide details about the
+error in these cases, so a generic message is given.
 
 #### URL syntax
 islandora/rest/v1/solr/{query}
