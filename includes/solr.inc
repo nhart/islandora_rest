@@ -53,7 +53,7 @@ function islandora_rest_solr_get_response(array $parameters) {
     $results = $solr->search($query, 0, isset($request['limit']) ? $request['limit'] : 10, $request, 'GET');
   }
   catch (Exception $e) {
-    watchdog('islandora_rest', '@message', array('@messge' => $e->getMessage()), WATCHDOG_WARNING);
+    watchdog('islandora_rest', 'Invalid Solr request: @message', array('@message' => $e->getMessage()), WATCHDOG_WARNING);
     $message = $e->getCode() == 400 ? t('Invalid Solr request.') : t('An error occurred and the request could not be processed.');
     throw new Exception($message, $e->getCode());
   }
