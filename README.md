@@ -14,6 +14,7 @@ CONTENTS OF THIS FILE
  * [Installation](#installation)
  * [Configuration](#configuration)
  * [Documentation](#documentation)
+   * [Authorization](#authorization)
    * [Describe An Existing Object](#describe-an-existing-object)
    * [Create A New Object](#create-a-new-object)
    * [Modify An Existing Objects Properties](#modify-an-existing-objects-properties)
@@ -129,6 +130,31 @@ supported in __PHP__.
 
 Since we don't have an HTTP Request parsing library __PUT__ requests are
 expecting raw **application/json** content as the request body.
+
+### Authorization
+
+Drupal doesn't support basic authorization out of the box; any script or other
+such code that needs authentication to hit the various REST endpoints should
+first make a POST request to the site login page and then maintain cookies for
+future requests.
+
+For example, using cURL on a UNIX-like system, and replacing `USERNAME`,
+`PASSWORD`, and `SITE_URL` with those respective items:
+```bash
+curl --cookie-jar ./cookies.txt -X POST -H "Content-Type: multipart/form-data" -F "name=USERNAME" -F "pass=PASSWORD" -F "form_id=user_login" -F "op=Log in" "http://SITE_URL/user/login"
+```
+
+In this case:
+* `name` and `pass` represent the login credentials
+* `form_id` represents the machine name of the form being POSTed to
+* `op` represents the element on the page being used to execute the POST
+
+The stored session data in cookies.txt could then be used for future cURL
+requests to the API.
+
+Of course, a more comprehensive solution is almost certainly desirable so that
+passwords are not stored in history - Bash or otherwise - but the same
+principles apply.
 
 ### Documentation Key
 {variable} Required Parameter.
@@ -559,7 +585,9 @@ Accept: application/json
 
 ## Search For Objects
 This is a light wrapper for the SOLR own end point. It incorporates XACML alters
-to restrict the search results for the given user.
+to restrict the search results for the given user. The Islandora Solr Search
+'Search the Solr index' permission is used for authentication instead of any
+custom permissions from this module.
 
 Because parameters are passed through to Solr carte blanche, invalid requests
 may trigger 400 errors. `Apache_Solr_Service` does not provide details about the
