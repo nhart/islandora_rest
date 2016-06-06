@@ -133,6 +133,10 @@ expecting raw **application/json** content as the request body.
 
 ### Authorization
 
+In its most common use case - JavaScript executing AJAX callbacks inside module
+code - no authorization is needed. For external requests, however, an additional
+step is required.
+
 Drupal doesn't support basic authorization out of the box; any script or other
 such code that needs authentication to hit the various REST endpoints should
 first make a POST request to the site login page and then maintain cookies for
