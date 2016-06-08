@@ -49,8 +49,10 @@ function islandora_rest_solr_get_response(array $parameters) {
     }
   }
   // Query is executed. Errors are caught and sent through to the response.
+  $offset = isset($request['start']) ? (int) $request['start'] : 0;
+  $limit = isset($request['rows']) ? (int) $request['rows'] : variable_get('islandora_solr_num_of_results', 20);
   try {
-    $results = $solr->search($query, 0, isset($request['limit']) ? $request['limit'] : 10, $request, 'GET');
+    $results = $solr->search($query, $offset, $limit, $request, 'GET');
   }
   catch (Exception $e) {
     watchdog('islandora_rest', 'Invalid Solr request: @message', array('@message' => $e->getMessage()), WATCHDOG_WARNING);
