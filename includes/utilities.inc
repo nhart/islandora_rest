@@ -47,6 +47,7 @@ function islandora_rest_get_response($endpoint, array $path_parameters) {
     $response = array('message' => $e->getMessage());
   }
   $encode = is_array($response) || is_object($response);
+  module_invoke_all('islandora_rest_response', $endpoint, $request_method, $pid, $dsid, $path_parameters);
   if ($encode) {
     // Reponses that don't generate objects or arrays, must set their own
     // content types. Not calling drupal_json_output because we are setting
@@ -346,6 +347,7 @@ function islandora_rest_get_solr_response(array $query) {
     $response = array('message' => $e->getMessage());
   }
   $encode = is_array($response) || is_object($response);
+  module_invoke_all('islandora_rest_solr_response', $query, $parameters);
   if ($encode) {
     // Reponses that don't generate objects or arrays, must set their own
     // content types. Not calling drupal_json_output because we are setting
