@@ -25,6 +25,8 @@ function islandora_rest_get_response($endpoint, array $path_parameters) {
   $path_parameters = array_filter($path_parameters);
   $request_method = islandora_rest_get_request_method();
   list($pid, $dsid) = islandora_rest_get_pid_dsid_from_path_parameters($path_parameters);
+  // Will be undefined if try block fails.
+  $parameters['request'] = '';
   try {
     // Fetch the requested resource. Throws 404, if the resource is not found.
     $resource = islandora_rest_get_requested_resource($pid, $dsid);
