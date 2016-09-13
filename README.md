@@ -530,6 +530,7 @@ Accept: application/json
 | label         | The new datastream's label (optional)
 | state         | The new datastream’s state, either “A”, “I”, “D” (optional) Defaults to “A”
 | mimeType      | The new datastream’s MIME Type (optional) if not provided then it is guessed from the uploaded file.
+| checksumType  | The new datastream’s checksum type (optional), e.g.,  SHA-1, MD5. Defaults to 'DISABLED'.
 | controlGroup  | The new datastream's control group, either X, M, E, R
 | versionable   | A boolean value if the datastream is versionable (optional) Defaults to true
 | multipart file as request content | File to use as the datastream’s content
@@ -564,6 +565,7 @@ Content-Type: application/json
 | label         | The datastream's new label (optional)
 | state         | The datastream’s new state, either “A”, “I”, “D” (optional)
 | mimeType      | The new datastream’s MIME Type (optional) if not provided then it is guessed from the uploaded file.
+| checksumType  | The datastream’s checksum type (optional), e.g.,  SHA-1, MD5. Defaults to 'DISABLED'.
 | versionable   | A boolean value if the datastream is versionable (optional) Defaults to true
 | multipart file as request content | File to replace existing datastream (for Managed datastreams)
 
@@ -629,7 +631,7 @@ TODO
 - [ ] Move DC transform logic out of XML Forms and have it use ingested/modified
       hooks instead.
 - [ ] Add support for purging previous versions of datastreams
-- [ ] Add checksum support to datastream end-points.
+- [x] Add checksum support to datastream end-points.
 - [ ] Add describe json end-point for the repository.
 - [ ] Make PUT requests support multi-part form data, populate $_FILES.
 - [ ] Investigate a making a jQuery plugin to ease interaction with REST API?

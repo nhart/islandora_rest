@@ -67,6 +67,7 @@ function islandora_rest_datastream_get_response(array $parameters) {
  *     - label: The datastream's label.
  *     - state: The datastream's state.
  *     - mimeType: The datastream's MIME Type.
+ *     - checksumType: The datastream's checksum type.
  *     - versionable: Turn versioning on/off.
  */
 function islandora_rest_datastream_put_response(array $parameters) {
@@ -92,6 +93,9 @@ function islandora_rest_datastream_put_response(array $parameters) {
   if (isset($request['mimeType'])) {
     $datastream->mimetype = $request['mimeType'];
   }
+  if (isset($request['checksumType'])) {
+    $datastream->checksumType = $request['checksumType'];
+  }
   // Mock the Get Response.
   return islandora_rest_datastream_get_response(array(
       'resource' => $datastream,
@@ -116,6 +120,7 @@ function islandora_rest_datastream_put_response(array $parameters) {
  *     - state: The new datastream's state (optional).
  *     - mimeType: The new datastream's MIME Type, the MIME Type of the uploaded
  *       file will be used if not provided (optional).
+ *     - checksumType: The new datastream's checksum type (optional).
  *     - versionable: If the datastream will be versionable, defaults to TRUE
  *       (optional).
  *
@@ -138,6 +143,7 @@ function islandora_rest_datastream_post_response(array $parameters) {
   $datastream->label = isset($request['label']) ? $request['label'] : $file['name'];
   $datastream->versionable = isset($request['versionable']) ? (bool) $request['versionable'] : TRUE;
   $datastream->mimetype = isset($request['mimeType']) ? $request['mimeType'] : $mime_detect->getMimetype($file['name']);
+  $datastream->checksumType = isset($request['checksumType']) ? $request['checksumType'] : 'DISABLED';
   $datastream->setContentFromFile($file['tmp_name']);
   if (!$object->ingestDatastream($datastream)) {
     throw new Exception('Conflict: Datastream already exists', 409);
