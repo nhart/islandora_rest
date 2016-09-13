@@ -219,6 +219,8 @@ function islandora_rest_get_datastream_properties(AbstractDatastream $datastream
     'controlGroup' => $datastream->controlGroup,
     'created' => (string) $datastream->createdDate,
     'versionable' => (bool) $datastream->versionable,
+    'checksum' => $datastream->checksum,
+    'checksumType' => $datastream->checksumType,
     'versions' => $versions,
   );
 }
@@ -240,5 +242,7 @@ function islandora_rest_get_datastream_version_properties(AbstractDatastream $da
     'mimeType' => $datastream->mimetype,
     'controlGroup' => $datastream->controlGroup,
     'created' => (string) $datastream->createdDate,
+    'checksum' => $datastream->checksum,
+    'checksumType' => $datastream->checksumType,
   );
 }

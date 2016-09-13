@@ -477,6 +477,8 @@ version of the data stream, these values are limited to a subset described here.
 | controlGroup  | The datastream's control group, either X, M, E, R
 | versionable   | A boolean value if the datastream is versionable
 | created       | Created date of the datastream, yyyy-MM-ddTHH:mm:ssZ
+| checksumType  | The checksum type, e.g., SHA-1, MD5. Value is "DISABLED" is checksums are not enabled for the datastream.
+| checksum      | The checksum value. Value is "none" if no checksum is available.
 | versions      | Any array of objects each describing each datastream version not including the latest, contains a subset of the fields described here.
 
 #### Example Response
@@ -489,6 +491,8 @@ version of the data stream, these values are limited to a subset described here.
   "mimeType": "application\/rdf+xml",
   "controlGroup": "X",
   "created": "2013-06-23T07:28:32.787Z",
+  "checksumType": "SHA-1",
+  "checksum": "46dbb3122dc1a140a5f344934251d7c1f680ff28",
   "versionable": true,
   "versions": [{
     "label": "Old Label.",
