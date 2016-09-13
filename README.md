@@ -477,7 +477,7 @@ version of the data stream, these values are limited to a subset described here.
 | controlGroup  | The datastream's control group, either X, M, E, R
 | versionable   | A boolean value if the datastream is versionable
 | created       | Created date of the datastream, yyyy-MM-ddTHH:mm:ssZ
-| checksumType  | The checksum type, e.g., SHA-1, MD5. Value is "DISABLED" is checksums are not enabled for the datastream.
+| checksumType  | The checksum type, e.g., SHA-1, MD5. Value is "DISABLED" if checksums are not enabled for the datastream.
 | checksum      | The checksum value. Value is "none" if no checksum is available.
 | versions      | Any array of objects each describing each datastream version not including the latest, contains a subset of the fields described here.
 
