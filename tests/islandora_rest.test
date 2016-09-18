@@ -113,6 +113,8 @@ class IslandoraRestTestCase extends IslandoraHttpRestTestCase {
           'mimeType' => $version->mimetype,
           'controlGroup' => $version->controlGroup,
           'created' => (string) $version->createdDate,
+          'checksumType' => $version->checksumType,
+          'checksum' => $version->checksum,
         );
       }
       $datastreams[] = array(
@@ -124,6 +126,8 @@ class IslandoraRestTestCase extends IslandoraHttpRestTestCase {
         'controlGroup' => $datastream->controlGroup,
         'created' => (string) $datastream->createdDate,
         'versionable' => $datastream->versionable,
+        'checksumType' => $datastream->checksumType,
+        'checksum' => $datastream->checksum,
         'versions' => $versions,
       );
     }
@@ -174,6 +178,8 @@ class IslandoraRestTestCase extends IslandoraHttpRestTestCase {
           'mimeType' => $version->mimetype,
           'controlGroup' => $version->controlGroup,
           'created' => (string) $version->createdDate,
+          'checksumType' => $version->checksumType,
+          'checksum' => $version->checksum,
         );
       }
       return array(
@@ -185,6 +191,8 @@ class IslandoraRestTestCase extends IslandoraHttpRestTestCase {
         'controlGroup' => $datastream->controlGroup,
         'created' => (string) $datastream->createdDate,
         'versionable' => $datastream->versionable,
+        'checksumType' => $datastream->checksumType,
+        'checksum' => $datastream->checksum,
         'versions' => $versions,
       );
     }
@@ -199,6 +207,8 @@ class IslandoraRestTestCase extends IslandoraHttpRestTestCase {
             'mimeType' => $version->mimetype,
             'controlGroup' => $version->controlGroup,
             'created' => (string) $version->createdDate,
+            'checksumType' => $version->checksumType,
+            'checksum' => $version->checksum,
           );
         }
       }
