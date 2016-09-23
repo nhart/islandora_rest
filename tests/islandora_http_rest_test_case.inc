@@ -105,7 +105,7 @@ class IslandoraHttpRestTestCase extends IslandoraWebTestCase {
    */
   protected function httpPost($path, $data, $options = array(), array $headers = array()) {
     // PHP 5.5.0 requires use of CURLFile().
-    if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
+    if (version_compare(PHP_VERSION, '5.5.0', '>=') && isset($data['file'])) {
       $fixture_path = ltrim($data['file'], '@');
       $data['file'] = new CURLFile($fixture_path, 'application/xml');
     }
