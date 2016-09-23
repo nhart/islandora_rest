@@ -538,11 +538,10 @@ class IslandoraRestTestCase extends IslandoraHttpRestTestCase {
 
     // Test PUT Datastream Content & Properties with the proper permissions.
     // Mock the request via POST.
-    $curlfile = new CURLFile(dirname(__FILE__) . '/fixtures/put_mods.xml', 'application/xml', 'put_mods.xml');
     $data = array(
       'method' => 'PUT',
       'label' => 'New MODS Label',
-      'file' => $curlfile,
+      'file' => '@' . dirname(__FILE__) . '/fixtures/put_mods.xml',
     );
     $response = $this->httpPost($path . '/MODS', $data);
     $expected = array(
@@ -591,12 +590,11 @@ class IslandoraRestTestCase extends IslandoraHttpRestTestCase {
     $this->assertFalse(isset($object['NEW']), 'Datastream was not created');
 
     // Test POST Datastream with the proper permissions and parameters.
-    $curlfile = new CURLFile(dirname(__FILE__) . '/fixtures/new_datastream.xml', 'application/xml', 'new_datastream.xml');
     $data = array(
       'dsid' => 'NEW',
       'label' => 'Test REST POST Datastream',
       'versionable' => FALSE,
-      'file' => $curlfile,
+      'file' => '@' . dirname(__FILE__) . '/fixtures/new_datastream.xml',
     );
     $response = $this->httpPost($path, $data);
     $expected = array(
