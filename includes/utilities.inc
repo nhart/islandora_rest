@@ -104,12 +104,29 @@ function islandora_rest_accessible($endpoint, $request_method, $resource = FALSE
   if ($endpoint == 'solr') {
     return islandora_rest_solr_access();
   }
+
+  // Retrieve both islandora core and islandora rest based permissions.
   $perm = islandora_rest_resource_access_permission($endpoint, $request_method);
+  $access = array();
   if (is_subclass_of($resource, 'AbstractObject')) {
-    return islandora_object_access($perm, $resource);
+    // Call core permission check, to ensure XACML permissions are
+    // Respected.
+    array_push($access, islandora_object_access($perm['core'], $resource));
+    array_push($access, islandora_object_access($perm['rest'], $resource));
+
+    // Deny access if either permission returns no access.
+    return in_array(FALSE, $access) ? FALSE : TRUE;
   }
   elseif (is_subclass_of($resource, 'AbstractDatastream')) {
-    return islandora_datastream_access($perm, $resource);
+    // Only for use with islandora tokened object access permission.
+    if (is_callable($perm['core'])) {
+      array_push($access, islandora_object_datastream_tokened_access_callback(ISLANDORA_VIEW_OBJECTS, $resource->parent->id, $resource));
+    }
+    else {
+      array_push($access, islandora_datastream_access($perm['core'], $resource));
+    }
+    array_push($access, islandora_datastream_access($perm['rest'], $resource));
+    return in_array(FALSE, $access) ? FALSE : TRUE;
   }
   return user_access($perm);
 }
@@ -145,26 +162,63 @@ function islandora_rest_get_pid_dsid_from_path_parameters(array $path_parameters
  *   The request method (GET/POST/PUT/DELETE).
  */
 function islandora_rest_resource_access_permission($endpoint, $request_method) {
+  // Create a map,
   $perm_map = array(
     'object' => array(
-      'GET' => ISLANDORA_REST_OBJECT_GET_PERM,
-      'PUT' => ISLANDORA_REST_OBJECT_PUT_PERM,
-      'POST' => ISLANDORA_REST_OBJECT_POST_PERM,
-      'DELETE' => ISLANDORA_REST_OBJECT_DELETE_PERM,
+      'GET' => array(
+        'rest' => ISLANDORA_REST_OBJECT_GET_PERM,
+        'core' => ISLANDORA_VIEW_OBJECTS,
+      ),
+      'PUT' => array(
+        'rest' => ISLANDORA_REST_OBJECT_PUT_PERM,
+        'core' => ISLANDORA_MANAGE_PROPERTIES,
+      ),
+      'POST' => array(
+        'rest' => ISLANDORA_REST_OBJECT_POST_PERM,
+        'core' => ISLANDORA_INGEST,
+      ),
+      'DELETE' => array(
+        'rest' => ISLANDORA_REST_OBJECT_DELETE_PERM,
+        'core' => ISLANDORA_PURGE,
+      ),
     ),
     'datastream' => array(
-      'GET' => ISLANDORA_REST_DATASTREAM_GET_PERM,
-      'PUT' => ISLANDORA_REST_DATASTREAM_PUT_PERM,
-      'POST' => ISLANDORA_REST_DATASTREAM_POST_PERM,
-      'DELETE' => ISLANDORA_REST_DATASTREAM_DELETE_PERM,
+      'GET' => array(
+        'rest' => ISLANDORA_REST_DATASTREAM_GET_PERM,
+        'core' => ISLANDORA_VIEW_OBJECTS,
+      ),
+      'PUT' => array(
+        'rest' => ISLANDORA_REST_DATASTREAM_PUT_PERM,
+        'core' => ISLANDORA_ADD_DS,
+      ),
+      'POST' => array(
+        'rest' => ISLANDORA_REST_DATASTREAM_POST_PERM,
+        'core' => ISLANDORA_METADATA_EDIT,
+      ),
+      'DELETE' => array(
+        'rest' => ISLANDORA_REST_DATASTREAM_DELETE_PERM,
+        'core' => ISLANDORA_PURGE,
+      ),
     ),
     'datastream_token' => array(
-      'GET' => ISLANDORA_REST_DATASTREAM_TOKEN_GET_PERM,
+      'GET' => array(
+        'rest' => ISLANDORA_REST_DATASTREAM_TOKEN_GET_PERM,
+        'core' => 'islandora_object_datastream_tokened_access_callback',
+      ),
     ),
     'relationship' => array(
-      'GET' => ISLANDORA_REST_RELATIONSHIP_GET_PERM,
-      'POST' => ISLANDORA_REST_RELATIONSHIP_POST_PERM,
-      'DELETE' => ISLANDORA_REST_RELATIONSHIP_DELETE_PERM,
+      'GET' => array(
+        'rest' => ISLANDORA_REST_RELATIONSHIP_GET_PERM,
+        'core' => ISLANDORA_VIEW_OBJECTS,
+      ),
+      'POST' => array(
+        'rest' => ISLANDORA_REST_RELATIONSHIP_POST_PERM,
+        'core' => ISLANDORA_METADATA_EDIT,
+      ),
+      'DELETE' => array(
+        'rest' => ISLANDORA_REST_RELATIONSHIP_DELETE_PERM,
+        'core' => ISLANDORA_PURGE,
+      ),
     ),
   );
   return $perm_map[$endpoint][$request_method];
@@ -255,14 +309,19 @@ function islandora_rest_get_requested_resource($pid = FALSE, $dsid = FALSE) {
   }
   catch (Exception $e) {
     if ($dsid) {
-      $message = t('Failed to retrieve the requested datastream: "@dsid" from "@pid"', array(
-                   '@pid' => $pid,
-                   '@dsid' => $dsid,
-                 ));
+      $message = t(
+        'Failed to retrieve the requested datastream: "@dsid" from "@pid"',
+        array(
+          '@pid' => $pid,
+          '@dsid' => $dsid,
+        )
+      );
     }
     else {
-      $message = t('Failed to retrieve the requested object: "@pid"', array(
-                   '@pid' => $pid));
+      $message = t(
+        'Failed to retrieve the requested object: "@pid"',
+        array('@pid' => $pid)
+      );
     }
     throw new Exception($message, $e->getCode(), $e);
   }
