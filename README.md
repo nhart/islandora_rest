@@ -24,6 +24,7 @@ CONTENTS OF THIS FILE
    * [Create A New Datastream](#create-a-new-datastream)
    * [Modify An Existing Datastreams Properties And Content](#modify-an-existing-datastreams-properties-and-content)
    * [Delete An Existing Datastream](#delete-an-existing-datastream)
+   * [Permission Mappings](#permission-mappings)
  * [Todo](#todo)
 
 SUMMARY
@@ -614,6 +615,30 @@ Accept: application/json
 The result will be unmodified server side since all the query types support the
 return of JSON directly to the user. So this will more or less just delegate to
 those respective end points. See the documentation for SOLR for more info.
+
+## Permission Mappings
+
+### Islandora Core Permissions mapping
+To ensure all object restrictions are respected on Islandora REST requests, core islandora permissions are mapped in
+the following way:
+
+#### Islandora Rest and Islandora Core permissions mapping
+| Rest Permission Name                     | Islandora Core Permission                                    |
+| ---------------------------------------- | ------------------------------------------------------------ |
+| ISLANDORA_REST_OBJECT_GET_PERM           | ISLANDORA_VIEW_OBJECTS
+| ISLANDORA_REST_OBJECT_PUT_PERM           | ISLANDORA_MANAGE_PROPERTIES
+| ISLANDORA_REST_OBJECT_POST_PERM          | ISLANDORA_INGEST
+| ISLANDORA_REST_OBJECT_DELETE_PERM        | ISLANDORA_PURGE
+| ISLANDORA_REST_DATASTREAM_GET_PERM       | ISLANDORA_VIEW_OBJECTS
+| ISLANDORA_REST_DATASTREAM_PUT_PERM       | ISLANDORA_METADATA_EDIT
+| ISLANDORA_REST_DATASTREAM_POST_PERM      | ISLANDORA_ADD_DS
+| ISLANDORA_REST_DATASTREAM_DELETE_PERM    | ISLANDORA_PURGE
+| ISLANDORA_REST_DATASTREAM_TOKEN_GET_PERM | ISLANDORA_VIEW_OBJECTS
+| ISLANDORA_REST_RELATIONSHIP_GET_PERM     | ISLANDORA_VIEW_OBJECTS
+| ISLANDORA_REST_RELATIONSHIP_POST_PERM    | ISLANDORA_METADATA_EDIT
+| ISLANDORA_REST_RELATIONSHIP_DELETE_PERM  | ISLANDORA_PURGE
+
+
 
 TODO
 ----
