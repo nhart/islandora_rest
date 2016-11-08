@@ -139,26 +139,6 @@ function _islandora_rest_permission_map() {
 }
 
 /**
- * Implements hook islandora_object_access().
- */
-function islandora_rest_islandora_object_access($op, $object, $user) {
-  $map = _islandora_rest_permission_map();
-  if (isset($map[$op])) {
-    return islandora_object_access($map[$op], $object, $user);
-  }
-}
-
-/**
- * Implements hook islandora_datastream_access().
- */
-function islandora_rest_islandora_datastream_access($op, $datastream, $user) {
-  $map = _islandora_rest_permission_map();
-  if (isset($map[$op])) {
-    return islandora_datastream_access($map[$op], $datastream, $user);
-  }
-}
-
-/**
  * Gets the PID and DSID from the path parameters.
  *
  * The resource paths can optionally include a PID and DSID, so this will
