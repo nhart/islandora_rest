@@ -396,7 +396,13 @@ class IslandoraRestTestCase extends IslandoraHttpRestTestCase {
                  ISLANDORA_REST_RELATIONSHIP_GET_PERM,
                  ISLANDORA_REST_RELATIONSHIP_POST_PERM,
                  ISLANDORA_REST_RELATIONSHIP_DELETE_PERM,
-               ));
+                 ISLANDORA_VIEW_OBJECTS,
+                 ISLANDORA_MANAGE_PROPERTIES,
+                 ISLANDORA_INGEST,
+                 ISLANDORA_PURGE,
+                 ISLANDORA_METADATA_EDIT,
+                 ISLANDORA_ADD_DS,
+        ));
     $this->drupalLogin($account);
 
     // Test GET Object as a non-administrator user.
