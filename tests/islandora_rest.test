@@ -400,13 +400,8 @@ class IslandoraRestTestCase extends IslandoraHttpRestTestCase {
                  ISLANDORA_MANAGE_PROPERTIES,
                  ISLANDORA_INGEST,
                  ISLANDORA_PURGE,
-                 ISLANDORA_VIEW_OBJECTS,
                  ISLANDORA_METADATA_EDIT,
                  ISLANDORA_ADD_DS,
-                 ISLANDORA_PURGE,
-                 ISLANDORA_VIEW_OBJECTS,
-                 ISLANDORA_METADATA_EDIT,
-                 ISLANDORA_PURGE
         ));
     $this->drupalLogin($account);
 
