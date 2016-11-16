@@ -143,7 +143,7 @@ function islandora_rest_datastream_post_response(array $parameters) {
   $datastream->label = isset($request['label']) ? $request['label'] : $file['name'];
   $datastream->versionable = isset($request['versionable']) ? (bool) $request['versionable'] : TRUE;
   $datastream->mimetype = isset($request['mimeType']) ? $request['mimeType'] : $mime_detect->getMimetype($file['name']);
-  $datastream->checksumType = isset($request['checksumType']) ? $request['checksumType'] : 'DISABLED';
+  $datastream->checksumType = isset($request['checksumType']) ? $request['checksumType'] : variable_get('islandora_checksum_checksum_type', 'DISABLED');
   $datastream->setContentFromFile($file['tmp_name']);
   if (!$object->ingestDatastream($datastream)) {
     throw new Exception('Conflict: Datastream already exists', 409);
