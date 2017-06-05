@@ -148,11 +148,11 @@ function islandora_rest_datastream_post_response(array $parameters) {
   // XXX: The return of FALSE will be deprecated in 7.x-1.10, remove this after.
   try {
     if (!$object->ingestDatastream($datastream)) {
-      throw new Exception('Conflict: Datastream already exists', 409);
+      throw new DatastreamExistsException();
     }
   }
   catch (DatastreamExistsException $e) {
-    throw new Exception('Conflict: Datastream already exists', 409);
+    throw new Exception('Conflict: Datastream already exists', 409, $e);
   }
   drupal_add_http_header('Status', 201);
   // Mock the Get Response.
