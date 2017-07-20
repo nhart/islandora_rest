@@ -408,8 +408,7 @@ Accept: application/json
 | uri           | The predicate URI for the given predicate
 | predicate     | The predicate of the relationship.
 | object        | Object of the relationship.
-| literal       | True if the object of the relationship is a literal, false if it is a URI
-| datatype      | If the object is a literal, the datatype of the literal (optional)
+| type          | The type of the object. Can be either, 'uri', 'string', 'int', 'date', 'none'.
 
 #### Response: 201 Created
 ##### No response body.

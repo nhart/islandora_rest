@@ -49,12 +49,11 @@ function islandora_rest_relationship_get_response(array $parameters) {
  *   An associative array containing relevent data for this request.
  *   - resource: The object that will own the new relationship.
  *   - request: The request parameters
- *     - uri: The predicate URI for the given predicate
+ *     - uri: The predicate URI for the given predicate.
  *     - predicate: The predicate of the relationship.
  *     - object: Object of the relationship.
- *     - type: The type of the object. This is expressed as an string it can be
- *       either, 'uri', 'string', 'int', 'date', 'none'. (optional)
- *       Defaults to 'uri'.
+ *     - type: The type of the object. This is expressed as a string it can be
+ *       either, 'uri', 'string', 'int', 'date', or 'none'.
  */
 function islandora_rest_relationship_post_response(array $parameters) {
   $request = $parameters['request'];
