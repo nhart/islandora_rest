@@ -53,13 +53,14 @@ function islandora_rest_relationship_get_response(array $parameters) {
  *     - predicate: The predicate of the relationship.
  *     - object: Object of the relationship.
  *     - type: The type of the object. This is expressed as a string it can be
- *       either, 'uri', 'string', 'int', 'date', or 'none'.
+ *       either, 'uri', 'string', 'int', 'date', or 'none'. Defaults to 'uri'.
  */
 function islandora_rest_relationship_post_response(array $parameters) {
   $request = $parameters['request'];
-  $required = array('uri', 'predicate', 'object', 'type');
+  $required = array('uri', 'predicate', 'object');
   islandora_rest_require_parameters($request, $required);
-  $type = islandora_rest_relationship_get_datatype($request['type']);
+  $request_type = isset($request['type']) ? $request['type'] : NULL;
+  $type = islandora_rest_relationship_get_datatype($request_type);
   $parameters['resource']->relationships->add($request['uri'], $request['predicate'], $request['object'], $type);
   drupal_add_http_header('Status', 201);
 }

@@ -405,10 +405,10 @@ Accept: application/json
 #### Post (form-data)
 | Name          | Description                                                  |
 | ------------- | ------------------------------------------------------------ |
-| uri           | The predicate URI for the given predicate
+| uri           | The predicate URI for the given predicate.
 | predicate     | The predicate of the relationship.
 | object        | Object of the relationship.
-| type          | The type of the object. Can be either, 'uri', 'string', 'int', 'date', 'none'.
+| type          | The type of the relationship object. Can be either 'uri', 'string', 'int', 'date', 'none'. Defaults to 'uri'.
 
 #### Response: 201 Created
 ##### No response body.
