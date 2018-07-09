@@ -643,7 +643,9 @@ the following way:
 | ISLANDORA_REST_RELATIONSHIP_POST_PERM    | ISLANDORA_METADATA_EDIT
 | ISLANDORA_REST_RELATIONSHIP_DELETE_PERM  | ISLANDORA_PURGE
 
+## License
 
+[GPLv3](http://www.gnu.org/licenses/gpl-3.0.txt)
 
 TODO
 ----
