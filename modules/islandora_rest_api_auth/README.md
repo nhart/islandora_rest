@@ -48,6 +48,10 @@ Current maintainers:
 
 * [discoverygarden](http://www.discoverygarden.ca)
 
+Originally based off of the work by [Mark Jordan](https://github.com/mjordan) on
+the [Islandora REST Authen](https://github.com/mjordan/islandora_rest_authen)
+module.
+
 ## Development
 
 If you would like to contribute to this module, please check out the helpful
