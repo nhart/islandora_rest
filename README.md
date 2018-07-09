@@ -158,6 +158,9 @@ Of course, a more comprehensive solution is almost certainly desirable so that
 passwords are not stored in history - Bash or otherwise - but the same
 principles apply.
 
+Alternatively the [islandora_rest_api_auth](https://github.com/discoverygarden/islandora_rest/tree/7.x/modules/islandora_rest_api_auth)
+submodule exists which can allow for token based user authentication instead.
+
 ### Documentation Key
 {variable} Required Parameter.
 

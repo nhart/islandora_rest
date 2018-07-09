@@ -1,0 +1,7 @@
+name = "Islandora REST API Authentication"
+description = "Alternative to passing around cookies in the request context for authentication with Islandora REST."
+dependencies[] = islandora
+dependencies[] = islandora_rest
+package = Islandora
+php = 5.3
+core = 7.x

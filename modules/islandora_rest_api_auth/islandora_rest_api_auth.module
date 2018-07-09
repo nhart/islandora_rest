@@ -1,0 +1,116 @@
+<?php
+
+/**
+ * @file
+ * Module hooks for the Islandora REST API Auth module.
+ */
+
+/**
+ * Implements hook_init().
+ */
+function islandora_rest_api_auth_init() {
+  islandora_rest_api_auth_authenticate();
+}
+
+/**
+ * Implements hook_form__FORMID_alter().
+ */
+function islandora_rest_api_auth_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
+  global $user;
+  // @TODO: Access check.
+  module_load_include('inc', 'islandora_rest', 'includes/utilities');
+  $access = FALSE;
+  foreach (user_role_permissions($user->roles) as $perms) {
+    if (array_intersect_key(islandora_rest_permission(), $perms)) {
+      $access = TRUE;
+      break;
+    }
+  }
+  if ($access) {
+    $form['islandora_rest_api_auth_token'] = array(
+      '#type' => 'password',
+      '#title' => t('Islandora REST API Authentication Token'),
+      '#description' => t('NOTE: The stored version is salted. Once a token has been stored and salted it is no longer able to be retrieved.'),
+    );
+    $form['#submit'][] = 'islandora_rest_api_auth_token_submit';
+  }
+}
+
+/**
+ * Authenticates the REST user.
+ */
+function islandora_rest_api_auth_authenticate() {
+  if (strpos(current_path(), 'islandora/rest/') === 0) {
+    $request_headers = getallheaders();
+    if (isset($request_headers['Authorization'])) {
+      list($username, $token) = explode(':', base64_decode(substr($request_headers['Authorization'], 6)));
+      if (islandora_rest_api_auth_authenticate_token($username, $token)) {
+        islandora_rest_api_auth_login($username);
+      }
+      else {
+        header('HTTP/1.0 401 Unauthorized', TRUE);
+        exit;
+      }
+    }
+  }
+}
+
+/**
+ * Authenticates a token.
+ *
+ * @param string $username
+ *   The name of the user authenticating.
+ * @param string $token
+ *   The token being used to authenticate.
+ *
+ * @return bool
+ *   TRUE if the user has access, FALSE otherwise.
+ */
+function islandora_rest_api_auth_authenticate_token($username, $token) {
+  module_load_include('inc', 'islandora_rest_api_auth', 'includes/db');
+  require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
+
+  $user = user_load_by_name($username);
+  // Retrieve the hash to auth against.
+  $stored_hash = islandora_rest_api_auth_retrieve_token($user->uid);
+
+  if (!$stored_hash) {
+    return FALSE;
+  }
+  $hash = _password_crypt('sha512', $token, $stored_hash);
+
+  return $hash && $stored_hash == $hash;
+}
+
+/**
+ * Logs in the REST user.
+ *
+ * @param string $username
+ *   The name of the user trying to login.
+ */
+function islandora_rest_api_auth_login($username) {
+  $account = user_load_by_name($username);
+  $form_state['uid'] = $account->uid;
+  user_login_submit(array(), $form_state);
+}
+
+/**
+ * Submit handler for generating and storing a token.
+ */
+function islandora_rest_api_auth_token_submit($form, $form_state) {
+  $raw_token = $form_state['values']['islandora_rest_api_auth_token'];
+  // Don't override with an empty token.
+  if (!empty($raw_token)) {
+    global $user;
+    module_load_include('inc', 'islandora_rest_api_auth', 'includes/db');
+    islandora_rest_api_auth_upsert_token($user->uid, $raw_token);
+  }
+}
+
+/**
+ * Implements hook_user_delete().
+ */
+function islandora_rest_api_auth_user_delete($account) {
+  module_load_include('inc', 'islandora_rest_api_auth', 'includes/db');
+  islandora_rest_api_auth_delete_token($account->uid);
+}
