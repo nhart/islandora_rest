@@ -37,6 +37,12 @@ Host: an.example.host
 Authorization: Basic dGVzdDp0ZXN0
 ```
 
+Or as a cURL command (object deletion):
+```bash
+curl -X DELETE -H "Authorization: Basic dGVzdDp0ZXN0" -v
+http://pathtothebox/islandora/rest/v1/object/islandora:root
+```
+
 ## Troubleshooting/Issues
 
 Having problems or solved a problem? Contact 
