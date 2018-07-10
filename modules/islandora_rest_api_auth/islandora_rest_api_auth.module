@@ -43,6 +43,7 @@ function islandora_rest_api_auth_authenticate() {
   if (strpos(current_path(), 'islandora/rest/') === 0) {
     $request_headers = getallheaders();
     if (isset($request_headers['Authorization'])) {
+      module_load_include('inc', 'islandora_rest_api_auth', 'includes/utilities');
       list($username, $token) = explode(':', base64_decode(substr($request_headers['Authorization'], 6)));
       if (islandora_rest_api_auth_authenticate_token($username, $token)) {
         islandora_rest_api_auth_login($username);
@@ -56,42 +57,17 @@ function islandora_rest_api_auth_authenticate() {
 }
 
 /**
- * Authenticates a token.
- *
- * @param string $username
- *   The name of the user authenticating.
- * @param string $token
- *   The token being used to authenticate.
- *
- * @return bool
- *   TRUE if the user has access, FALSE otherwise.
- */
-function islandora_rest_api_auth_authenticate_token($username, $token) {
-  module_load_include('inc', 'islandora_rest_api_auth', 'includes/db');
-  require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
-
-  $user = user_load_by_name($username);
-  // Retrieve the hash to auth against.
-  $stored_hash = islandora_rest_api_auth_retrieve_token($user->uid);
-
-  if (!$stored_hash) {
-    return FALSE;
-  }
-  $hash = _password_crypt('sha512', $token, $stored_hash);
-
-  return $hash && $stored_hash == $hash;
-}
-
-/**
  * Logs in the REST user.
  *
  * @param string $username
  *   The name of the user trying to login.
+ *
+ * @see https://www.drupal.org/node/218104
  */
 function islandora_rest_api_auth_login($username) {
-  $account = user_load_by_name($username);
-  $form_state['uid'] = $account->uid;
-  user_login_submit(array(), $form_state);
+  global $user;
+  drupal_save_session(FALSE);
+  $user = user_load_by_name($username);
 }
 
 /**

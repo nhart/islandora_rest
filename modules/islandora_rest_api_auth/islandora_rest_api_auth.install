@@ -12,11 +12,6 @@ function islandora_rest_api_auth_schema() {
   $schema = array();
   $schema['islandora_rest_api_auth_tokens'] = array(
     'fields' => array(
-      'aid' => array(
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
       'uid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
@@ -33,7 +28,7 @@ function islandora_rest_api_auth_schema() {
         'columns' => array('uid' => 'uid'),
       ),
     ),
-    'primary key' => array('aid'),
+    'primary key' => array('uid'),
   );
   return $schema;
 }
