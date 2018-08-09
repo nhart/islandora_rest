@@ -45,6 +45,12 @@ http://pathtothebox/islandora/rest/v1/object/islandora:root
 
 ## Troubleshooting/Issues
 
+A limitation currently exists when setting authtokens where they will only ever
+be applied to the currently-logged-in user. This includes attempting to set an
+authtoken for another user on their "Edit" page. This will be addressed in the
+future, but for now, authtokens can only be created for a user when they are
+logged in and looking at their own "Edit" page.
+
 Having problems or solved a problem? Contact 
 [discoverygarden](http://support.discoverygarden.ca).
 
