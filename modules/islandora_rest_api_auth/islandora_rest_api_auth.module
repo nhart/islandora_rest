@@ -41,10 +41,12 @@ function islandora_rest_api_auth_form_user_profile_form_alter(&$form, &$form_sta
  */
 function islandora_rest_api_auth_authenticate() {
   if (strpos(current_path(), 'islandora/rest/') === 0) {
-    $request_headers = getallheaders();
-    if (isset($request_headers['Authorization'])) {
+    if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+      $authheader = $_SERVER['HTTP_AUTHORIZATION'];
+    }
+    if (isset($authheader)) {
       module_load_include('inc', 'islandora_rest_api_auth', 'includes/utilities');
-      list($username, $token) = explode(':', base64_decode(substr($request_headers['Authorization'], 6)));
+      list($username, $token) = explode(':', base64_decode(substr($authheader, 6)));
       if (islandora_rest_api_auth_authenticate_token($username, $token)) {
         islandora_rest_api_auth_login($username);
       }
