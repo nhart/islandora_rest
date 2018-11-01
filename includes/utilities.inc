@@ -399,7 +399,7 @@ function islandora_rest_get_solr_response(array $query) {
  */
 function islandora_rest_get_solr_parameters() {
   if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $pairs = explode("&", $_SERVER['QUERY_STRING']);
+    $pairs = array_filter(explode("&", $_SERVER['QUERY_STRING']));
     $parsed_params = array();
     foreach ($pairs as $pair) {
       list($name, $value) = array_map('urldecode', explode('=', $pair, 2));
