@@ -13,7 +13,7 @@ define('ISLANDORA_REST_OBJECT_MENU', ISLANDORA_REST_URL_PREFIX . '/object');
 define('ISLANDORA_REST_DATASTREAM_MENU', ISLANDORA_REST_OBJECT_MENU . '/%/datastream');
 define('ISLANDORA_REST_DATASTREAM_TOKEN_MENU', ISLANDORA_REST_DATASTREAM_MENU . '/%/token');
 define('ISLANDORA_REST_RELATIONSHIP_MENU', ISLANDORA_REST_OBJECT_MENU . '/%/relationship');
-define('ISLANDORA_REST_SOLR_MENU', ISLANDORA_REST_URL_PREFIX . '/solr');
+define('ISLANDORA_REST_SOLR_MENU', ISLANDORA_REST_URL_PREFIX . '/solr/%menu_tail');
 
 // Permissions.
 define('ISLANDORA_REST_OBJECT_GET_PERM', 'view objects');
@@ -61,8 +61,15 @@ function islandora_rest_menu() {
     ),
     ISLANDORA_REST_SOLR_MENU => array(
       'page callback' => 'islandora_rest_solr',
+      'page arguments' => array(
+        4,
+      ),
       'access callback' => TRUE,
       'type' => MENU_CALLBACK,
+      'load arguments' => array(
+        '%map',
+        '%index',
+      ),
     ),
   );
 }
