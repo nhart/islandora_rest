@@ -44,7 +44,7 @@ function islandora_rest_api_auth_authenticate() {
     if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
       $authheader = $_SERVER['HTTP_AUTHORIZATION'];
     }
-    if (isset($authheader)) {
+    if (isset($authheader) && !empty($authheader)) {
       module_load_include('inc', 'islandora_rest_api_auth', 'includes/utilities');
       list($username, $token) = explode(':', base64_decode(substr($authheader, 6)));
       if (islandora_rest_api_auth_authenticate_token($username, $token)) {
