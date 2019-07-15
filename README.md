@@ -650,6 +650,12 @@ the following way:
 
 [GPLv3](http://www.gnu.org/licenses/gpl-3.0.txt)
 
+## Related Projects / Client Libraries
+
+* [mjordan/irc](https://github.com/mjordan/irc): PHP/Guzzle library for creating Islandora REST clients
+  * [SFULibrary/islandora_rest_ingester](https://github.com/SFULibrary/islandora_rest_ingester) CLI Ingestor using the above
+* [kulibraries/islandora7-rest](https://github.com/kulibraries/islandora7-rest) Python client library for Islandora REST
+
 TODO
 ----
 - [ ] Update Solution Packs to use datastream ingested/modified hooks rather
