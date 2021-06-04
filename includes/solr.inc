@@ -48,6 +48,18 @@ function islandora_rest_solr_get_response(array $parameters) {
       $request['fq'] = $xacml_fq;
     }
   }
+
+  $namespace_restriction = variable_get('islandora_namespace_restriction_enforced', FALSE);
+  if ($namespace_restriction == TRUE) {
+    $allowed_namespaces = trim(variable_get('islandora_pids_allowed', 'default: demo: changeme: ilives: islandora-book: books: newspapers: '));
+    $namespaces = preg_split('/[: |\s]/', $allowed_namespaces);
+    $namespace_array = array();
+    foreach (array_filter($namespaces) as $namespace) {
+      $namespace_array[] = "PID:$namespace\:*";
+    }
+      $request['fq'] = implode(' OR ', $namespace_array);
+  }
+
   // Query is executed. Errors are caught and sent through to the response.
   $offset = isset($request['start']) ? (int) $request['start'] : 0;
   $limit = isset($request['rows']) ? (int) $request['rows'] : variable_get('islandora_solr_num_of_results', 20);
