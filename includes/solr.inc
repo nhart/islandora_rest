@@ -49,10 +49,10 @@ function islandora_rest_solr_get_response(array $parameters) {
     }
   }
 
-  $namespace_restriction = variable_get('islandora_namespace_restriction_enforced', FALSE);
-  if ($namespace_restriction == TRUE) {
-    $allowed_namespaces = trim(variable_get('islandora_pids_allowed', 'default: demo: changeme: ilives: islandora-book: books: newspapers: '));
-    $namespaces = preg_split('/[: |\s]/', $allowed_namespaces);
+  $namespace_restriction = variable_get('islandora_solr_namespace_restriction', FALSE);
+  if (!empty($namespace_restriction)) {
+    $allowed_namespaces = trim($namespace_restriction);
+    $namespaces = preg_split('/[, |\s]/', $allowed_namespaces);
     $namespace_array = array();
     foreach (array_filter($namespaces) as $namespace) {
       $namespace_array[] = "PID:$namespace\:*";
