@@ -57,7 +57,12 @@ function islandora_rest_solr_get_response(array $parameters) {
     foreach (array_filter($namespaces) as $namespace) {
       $namespace_array[] = "PID:$namespace\:*";
     }
+    if (is_array($request['fq'])) {
+      $request['fq'][] = implode(' OR ', $namespace_array);
+    }
+    else {
       $request['fq'] = implode(' OR ', $namespace_array);
+    }
   }
 
   // Query is executed. Errors are caught and sent through to the response.
