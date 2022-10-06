@@ -17,22 +17,23 @@ function islandora_rest_api_auth_init() {
  */
 function islandora_rest_api_auth_form_user_profile_form_alter(&$form, &$form_state, $form_id) {
   global $user;
-
-  module_load_include('inc', 'islandora_rest', 'includes/utilities');
-  $access = FALSE;
-  foreach (user_role_permissions($user->roles) as $perms) {
-    if (array_intersect_key(islandora_rest_permission(), $perms)) {
-      $access = TRUE;
-      break;
+  if ($form_state['user']->uid == $user->uid) {
+    module_load_include('inc', 'islandora_rest', 'includes/utilities');
+    $access = FALSE;
+    foreach (user_role_permissions($user->roles) as $perms) {
+      if (array_intersect_key(islandora_rest_permission(), $perms)) {
+        $access = TRUE;
+        break;
+      }
     }
-  }
-  if ($access) {
-    $form['islandora_rest_api_auth_token'] = array(
-      '#type' => 'password',
-      '#title' => t('Islandora REST API Authentication Token'),
-      '#description' => t('NOTE: The stored version is salted. Once a token has been stored and salted it is no longer able to be retrieved.'),
-    );
-    $form['#submit'][] = 'islandora_rest_api_auth_token_submit';
+    if ($access) {
+      $form['islandora_rest_api_auth_token'] = array(
+        '#type' => 'password',
+        '#title' => t('Islandora REST API Authentication Token'),
+        '#description' => t('NOTE: The stored version is salted. Once a token has been stored and salted it is no longer able to be retrieved.'),
+      );
+      $form['#submit'][] = 'islandora_rest_api_auth_token_submit';
+    }
   }
 }
 
